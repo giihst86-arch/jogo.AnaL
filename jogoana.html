@@ -1,0 +1,835 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#082f49">
+<title>Missão: Sistema Excretor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --navy:#092f43;
+  --blue:#087e8b;
+  --teal:#12a89d;
+  --white:#fff;
+  --muted:#6d8189;
+  --line:#e4ece9;
+  --green:#16845b;
+  --red:#c64d59;
+  --shadow:0 24px 70px rgba(6,44,59,.16);
+}
+
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  min-height:100vh;
+  padding:34px 16px;
+  display:grid;
+  place-items:center;
+  font-family:'DM Sans',Arial,sans-serif;
+  color:var(--navy);
+  background:
+    radial-gradient(ellipse at 8% 15%,rgba(36,190,163,.22),transparent 32%),
+    radial-gradient(ellipse at 95% 85%,rgba(63,158,190,.2),transparent 34%),
+    linear-gradient(135deg,#eaf5ef,#eef6f8 52%,#e5f1ef);
+}
+
+.app {
+  width:min(100%,850px);
+  position:relative;
+  z-index:1;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:19px;
+  color:#37616c;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:2.4px;
+  text-transform:uppercase;
+}
+
+.brand-mark {
+  width:31px;
+  height:31px;
+  border-radius:11px;
+  background:linear-gradient(145deg,#0c8790,#18b49f);
+  display:grid;
+  place-items:center;
+  color:white;
+  font-size:17px;
+}
+
+.shell {
+  background:rgba(255,255,255,.94);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:30px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+
+.hero {
+  background:linear-gradient(115deg,#082f43,#075568 60%,#087e82);
+  color:white;
+  padding:30px clamp(22px,5vw,48px) 26px;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  position:relative;
+  z-index:1;
+}
+
+.kicker {
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:#8ee3d3;
+  font-weight:800;
+  margin-bottom:8px;
+}
+
+h1 {
+  font:700 clamp(27px,5vw,39px)/1.08 'Outfit',sans-serif;
+  margin:0 0 9px;
+}
+
+.subtitle {
+  font-size:14px;
+  line-height:1.55;
+  color:#c7e2e4;
+  margin:0;
+}
+
+.hero-icon {
+  width:94px;
+  height:94px;
+  flex:0 0 94px;
+  border-radius:27px;
+  background:#ffffff14;
+  border:1px solid #ffffff26;
+  display:grid;
+  place-items:center;
+  font-size:48px;
+}
+
+.content {
+  padding:clamp(23px,5vw,43px);
+}
+
+.start {
+  text-align:center;
+  padding:10px 0 7px;
+}
+
+.organ-art {
+  width:min(100%,300px);
+  height:140px;
+  margin:0 auto 16px;
+  display:block;
+}
+
+.pill {
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:#e9f8f3;
+  color:#087c70;
+  padding:8px 13px;
+  border-radius:30px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.start h2,.result h2 {
+  font:700 clamp(25px,4vw,32px) 'Outfit',sans-serif;
+  margin:16px 0 9px;
+}
+
+.intro {
+  max-width:490px;
+  margin:0 auto 24px;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.7;
+}
+
+.primary {
+  border:0;
+  border-radius:14px;
+  padding:15px 25px;
+  background:linear-gradient(110deg,#07838c,#10a995);
+  color:white;
+  font:700 15px 'DM Sans',sans-serif;
+  cursor:pointer;
+  box-shadow:0 9px 22px #0b9c8b35;
+  transition:.18s;
+}
+
+.primary:hover {
+  transform:translateY(-2px);
+}
+
+.primary:disabled {
+  opacity:.42;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none;
+}
+
+.quiz-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:12px;
+}
+
+.counter {
+  font-size:13px;
+  font-weight:800;
+  color:#57717a;
+}
+
+.points {
+  background:#fff5dc;
+  color:#9a6a12;
+  border-radius:30px;
+  padding:9px 13px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.progress {
+  height:8px;
+  background:#edf2ef;
+  border-radius:20px;
+  overflow:hidden;
+  margin-bottom:28px;
+}
+
+.progress span {
+  display:block;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#0e9b91,#67cda9);
+  border-radius:20px;
+  transition:width .35s;
+}
+
+.question-label {
+  color:#0b938b;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1.7px;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+
+.question {
+  font:700 clamp(22px,4vw,29px)/1.3 'Outfit',sans-serif;
+  margin:0 0 23px;
+}
+
+.answers {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.answer {
+  display:flex;
+  align-items:center;
+  gap:13px;
+  min-height:68px;
+  padding:13px 16px;
+  text-align:left;
+  background:#fbfdfc;
+  border:1.5px solid var(--line);
+  border-radius:16px;
+  color:#193f4d;
+  font:600 14px/1.4 'DM Sans',sans-serif;
+  cursor:pointer;
+  transition:.18s;
+}
+
+.answer:hover:not(:disabled) {
+  border-color:#35b9a5;
+  background:#f1fbf7;
+  transform:translateY(-2px);
+}
+
+.letter {
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  border-radius:11px;
+  background:#eaf3f1;
+  color:#087e7d;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+}
+
+.answer.correct {
+  border-color:#2ba879;
+  background:#eaf8f0;
+  color:#146b4b;
+}
+
+.answer.correct .letter {
+  background:#ccefdc;
+  color:#146b4b;
+}
+
+.answer.wrong {
+  border-color:#e58a91;
+  background:#fff0f0;
+  color:#a63f49;
+}
+
+.answer.wrong .letter {
+  background:#ffdddd;
+  color:#a63f49;
+}
+
+.answer:disabled {
+  cursor:default;
+}
+
+.feedback {
+  display:none;
+  margin-top:18px;
+  padding:15px 17px;
+  border-radius:15px;
+  font-size:14px;
+  line-height:1.6;
+}
+
+.feedback.show {
+  display:block;
+}
+
+.feedback.good {
+  background:#eaf8f0;
+  color:#176a4b;
+  border:1px solid #ccebd9;
+}
+
+.feedback.bad {
+  background:#fff1f1;
+  color:#98434b;
+  border:1px solid #f4d5d7;
+}
+
+.feedback strong {
+  display:block;
+  margin-bottom:3px;
+}
+
+.actions {
+  display:flex;
+  justify-content:flex-end;
+  margin-top:20px;
+}
+
+.result {
+  text-align:center;
+  padding:12px 0 6px;
+}
+
+.result-icon {
+  width:94px;
+  height:94px;
+  margin:0 auto 14px;
+  border-radius:30px;
+  display:grid;
+  place-items:center;
+  background:#e8f8f1;
+  font-size:48px;
+}
+
+.score {
+  font:800 54px 'Outfit',sans-serif;
+  color:#078b83;
+  margin:7px 0;
+}
+
+.result p {
+  color:var(--muted);
+  line-height:1.65;
+  max-width:470px;
+  margin:0 auto 22px;
+}
+
+.footer {
+  text-align:center;
+  color:#69828a;
+  font-size:11px;
+  margin-top:16px;
+  letter-spacing:.2px;
+}
+
+[hidden] {
+  display:none!important;
+}
+
+@media(max-width:580px) {
+  body {
+    padding:14px 10px;
+    align-items:start;
+  }
+
+  .brand {
+    margin:3px 0 13px;
+  }
+
+  .shell {
+    border-radius:23px;
+  }
+
+  .hero {
+    padding:24px 21px 22px;
+  }
+
+  .hero-icon {
+    width:66px;
+    height:66px;
+    flex-basis:66px;
+    border-radius:20px;
+    font-size:34px;
+  }
+
+  .subtitle {
+    font-size:12px;
+  }
+
+  .content {
+    padding:24px 19px;
+  }
+
+  .organ-art {
+    height:112px;
+  }
+
+  .answers {
+    grid-template-columns:1fr;
+    gap:9px;
+  }
+
+  .answer {
+    min-height:59px;
+    padding:11px 13px;
+  }
+
+  .question {
+    margin-bottom:18px;
+  }
+
+  .progress {
+    margin-bottom:23px;
+  }
+
+  .actions .primary {
+    width:100%;
+  }
+}
+</style>
+</head>
+
+<body>
+<main class="app">
+
+  <div class="brand">
+    <span class="brand-mark">✦</span>
+    Aprender é descobrir
+  </div>
+
+  <section class="shell">
+
+    <header class="hero">
+      <div class="hero-row">
+        <div>
+          <div class="kicker">Desafio de Ciências · 5 questões</div>
+          <h1>Missão: Sistema<br>Excretor</h1>
+          <p class="subtitle">
+            Vamos descobrir como o corpo elimina aquilo de que não precisa?
+          </p>
+        </div>
+        <div class="hero-icon">💧</div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- TELA INICIAL -->
+      <section class="start" id="startScreen">
+
+        <svg class="organ-art" viewBox="0 0 320 145">
+          <defs>
+            <linearGradient id="kidney" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#f5a39a"/>
+              <stop offset="1" stop-color="#d96f76"/>
+            </linearGradient>
+          </defs>
+
+          <path d="M117 17C79 1 49 27 56 67c5 31 30 43 53 27 17-12 16-32 26-48-1-13-7-23-18-29Z"
+            fill="url(#kidney)" stroke="#bd626c" stroke-width="3"/>
+
+          <path d="M203 17c38-16 68 10 61 50-5 31-30 43-53 27-17-12-16-32-26-48 1-13 7-23 18-29Z"
+            fill="url(#kidney)" stroke="#bd626c" stroke-width="3"/>
+
+          <path d="M126 77c7 10 14 18 20 34M194 77c-7 10-14 18-20 34"
+            fill="none" stroke="#e6b84f" stroke-width="7" stroke-linecap="round"/>
+
+          <path d="M146 108c0-8 6-12 14-12s14 4 14 12c0 14-7 21-14 21s-14-7-14-21Z"
+            fill="#f5cf6c" stroke="#c59a3c" stroke-width="3"/>
+
+          <path d="M160 129v9" stroke="#c59a3c" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+
+        <div class="pill">✦ Aprenda brincando</div>
+
+        <h2>Vamos começar?</h2>
+
+        <p class="intro">
+          Responda às 5 perguntas sobre o sistema excretor.
+          Depois de cada resposta, você vai descobrir se acertou
+          e aprender um pouco mais sobre o assunto.
+        </p>
+
+        <button class="primary" onclick="startGame()">
+          Iniciar desafio →
+        </button>
+
+      </section>
+
+      <!-- TELA DAS PERGUNTAS -->
+      <section id="quizScreen" hidden>
+
+        <div class="quiz-top">
+          <span class="counter" id="questionCount">QUESTÃO 01 / 05</span>
+          <span class="points" id="scoreCount">★ 0 pontos</span>
+        </div>
+
+        <div class="progress">
+          <span id="progressFill"></span>
+        </div>
+
+        <div class="question-label">
+          Escolha a alternativa correta
+        </div>
+
+        <h2 class="question" id="questionText"></h2>
+
+        <div class="answers" id="answers"></div>
+
+        <div class="feedback" id="feedback"
+             role="status" aria-live="polite"></div>
+
+        <div class="actions">
+          <button class="primary" id="nextButton"
+                  onclick="nextQuestion()" disabled>
+            Próxima questão →
+          </button>
+        </div>
+
+      </section>
+
+      <!-- TELA FINAL -->
+      <section class="result" id="resultScreen" hidden>
+
+        <div class="result-icon" id="resultIcon">🏆</div>
+
+        <div class="pill">✦ Desafio finalizado</div>
+
+        <h2>Você conseguiu!</h2>
+
+        <div class="score" id="finalScore">0/5</div>
+
+        <p id="resultMessage"></p>
+
+        <button class="primary" onclick="restartGame()">
+          ↻ Jogar novamente
+        </button>
+
+      </section>
+
+    </div>
+  </section>
+
+  <div class="footer">
+    MISSÃO SISTEMA EXCRETOR · CIÊNCIAS
+  </div>
+
+</main>
+
+<script>
+const questions = [
+
+  {
+    question:"Qual é a principal função do sistema excretor?",
+    answers:[
+      "Transportar oxigênio",
+      "Eliminar resíduos do organismo",
+      "Produzir alimentos",
+      "Controlar os movimentos"
+    ],
+    correct:1,
+    explanation:
+      "O corpo produz resíduos enquanto funciona. O sistema excretor ajuda a retirar essas substâncias, mantendo o organismo em equilíbrio."
+  },
+
+  {
+    question:"Qual órgão filtra o sangue e produz a urina?",
+    answers:[
+      "Coração",
+      "Pulmão",
+      "Rim",
+      "Estômago"
+    ],
+    correct:2,
+    explanation:
+      "Os rins trabalham como filtros: retiram do sangue parte dos resíduos e o excesso de água, formando a urina."
+  },
+
+  {
+    question:"Por onde a urina sai do corpo?",
+    answers:[
+      "Uretra",
+      "Esôfago",
+      "Intestino",
+      "Traqueia"
+    ],
+    correct:0,
+    explanation:
+      "A urina passa pela uretra para sair do corpo. Ela é diferente dos ureteres, que levam a urina dos rins até a bexiga."
+  },
+
+  {
+    question:"Onde a urina fica armazenada?",
+    answers:[
+      "Nos rins",
+      "Na bexiga",
+      "No fígado",
+      "No coração"
+    ],
+    correct:1,
+    explanation:
+      "Depois de ser produzida nos rins, a urina segue pelos ureteres e fica guardada na bexiga até irmos ao banheiro."
+  },
+
+  {
+    question:"Qual substância é eliminada principalmente pela urina?",
+    answers:[
+      "Oxigênio",
+      "Gás carbônico",
+      "Ureia",
+      "Proteína"
+    ],
+    correct:2,
+    explanation:
+      "A ureia é formada durante o processamento das proteínas pelo corpo. Como precisa ser eliminada, os rins retiram boa parte dela do sangue."
+  }
+
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+const $ = id => document.getElementById(id);
+
+function startGame() {
+  current = 0;
+  score = 0;
+
+  $("startScreen").hidden = true;
+  $("resultScreen").hidden = true;
+  $("quizScreen").hidden = false;
+
+  showQuestion();
+}
+
+function showQuestion() {
+
+  answered = false;
+
+  const q = questions[current];
+
+  $("questionCount").textContent =
+    `QUESTÃO ${String(current+1).padStart(2,"0")} / 05`;
+
+  $("scoreCount").textContent =
+    `★ ${score} ${score === 1 ? "ponto" : "pontos"}`;
+
+  $("progressFill").style.width =
+    `${(current/questions.length)*100}%`;
+
+  $("questionText").textContent = q.question;
+
+  $("feedback").className = "feedback";
+  $("feedback").textContent = "";
+
+  $("nextButton").disabled = true;
+
+  $("nextButton").textContent =
+    current === 4 ? "Ver meu resultado →" : "Próxima questão →";
+
+  const area = $("answers");
+
+  area.replaceChildren();
+
+  q.answers.forEach((answer,index) => {
+
+    const btn = document.createElement("button");
+    btn.className = "answer";
+
+    const letter = document.createElement("span");
+    letter.className = "letter";
+    letter.textContent = String.fromCharCode(65+index);
+
+    const label = document.createElement("span");
+    label.textContent = answer;
+
+    btn.append(letter,label);
+
+    btn.addEventListener("click",() => chooseAnswer(index));
+
+    area.append(btn);
+
+  });
+
+}
+
+function chooseAnswer(index) {
+
+  if(answered) return;
+
+  answered = true;
+
+  const q = questions[current];
+
+  [...document.querySelectorAll(".answer")].forEach((btn,i) => {
+
+    btn.disabled = true;
+
+    if(i === q.correct) {
+      btn.classList.add("correct");
+    }
+
+    if(i === index && i !== q.correct) {
+      btn.classList.add("wrong");
+    }
+
+  });
+
+  const fb = $("feedback");
+
+  if(index === q.correct) {
+
+    score++;
+
+    fb.className = "feedback show good";
+
+    fb.innerHTML =
+      "<strong>✓ Isso mesmo! Você acertou.</strong>" +
+      q.explanation;
+
+  } else {
+
+    fb.className = "feedback show bad";
+
+    fb.innerHTML =
+      `<strong>Não foi dessa vez! A resposta certa é ${
+        String.fromCharCode(65+q.correct)
+      } — ${q.answers[q.correct]}.</strong>` +
+      q.explanation;
+
+  }
+
+  $("scoreCount").textContent =
+    `★ ${score} ${score === 1 ? "ponto" : "pontos"}`;
+
+  $("nextButton").disabled = false;
+
+}
+
+function nextQuestion() {
+
+  if(!answered) return;
+
+  current++;
+
+  if(current < questions.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+
+}
+
+function showResult() {
+
+  $("quizScreen").hidden = true;
+  $("resultScreen").hidden = false;
+
+  $("progressFill").style.width = "100%";
+
+  $("finalScore").textContent = `${score}/5`;
+
+  let message;
+  let icon;
+
+  if(score === 5) {
+
+    message =
+      "Você acertou todas! Mandou muito bem. Já conhece bem o caminho que a urina faz pelo corpo.";
+
+    icon = "🏆";
+
+  } else if(score >= 3) {
+
+    message =
+      "Boa! Você acertou a maioria. Revise as perguntas em que teve dúvida e tente mais uma vez.";
+
+    icon = "🌟";
+
+  } else {
+
+    message =
+      "Faz parte! Volte às perguntas, leia as explicações e tente de novo. Você vai pegar o jeito!";
+
+    icon = "💧";
+
+  }
+
+  $("resultMessage").textContent = message;
+  $("resultIcon").textContent = icon;
+
+}
+
+function restartGame() {
+
+  $("resultScreen").hidden = true;
+  $("startScreen").hidden = false;
+
+  $("progressFill").style.width = "0%";
+
+}
+</script>
+
+</body>
+</html>
